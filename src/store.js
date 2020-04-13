@@ -18,5 +18,3 @@ export const store = new Vuex.Store({
   },
   actions: {}
 });
-
-// <p>You chose {{ $store.getters.flavor }}</p>
