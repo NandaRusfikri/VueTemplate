@@ -118,9 +118,9 @@ if (window.sessionStorage) {
   const localToken = window.sessionStorage.getItem('token');
 
   if (localUserString !== null) {
-    const localUser = JSON.parse(localUserString);
+    // const localUser = JSON.parse(localUserString);
 
-    store.commit('SET_USER', localUser);
+    store.commit('SET_USER', localUserString);
     store.commit('SET_TOKEN', localToken);
   }
 }

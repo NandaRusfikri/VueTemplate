@@ -1,8 +1,11 @@
 <template>
   <v-app>
-    <v-alert v-if="alert" dense outlined type="error">
+    <v-snackbar v-model="snackbar" :color="color.snackbar" top="top">
       {{ message }}
-    </v-alert>
+      <v-btn dark text @click="snackbar = false">
+        Close
+      </v-btn>
+    </v-snackbar>
     <v-row fill-height align="center" justify="center" style="margin:0">
       <v-col cols="12" sm="8" md="4">
         <v-card class="elevation-12">
@@ -71,38 +74,38 @@ export default {
   },
   data() {
     return {
-      eula: true,
       email: null,
       password: null,
-      alert: false,
-      message: null,
-      response: null
+      color: { snackbar: '' },
+      snackbar: false,
+      message: null
     };
   },
   methods: {
     async Login() {
-      let formData = new FormData();
-      formData.append('email', this.email);
-      formData.append('password', this.password);
+      const resp = await this.$axios
+        .post('api/login', {
+          email: this.email,
+          password: this.password
+        })
+        .then(function(response) {
+          return response;
+        })
+        .catch(error => {
+          return error.response;
+        });
 
-      const response = await this.$req.post('/api/user/v1/biz/login', formData);
-      await console.log('response', response);
-      // this.response == response;
-      console.log('status', response.status);
-      if (response.status == 200) {
-        console.log('token', response.data.data[0].token);
-        window.sessionStorage.setItem(
-          'user',
-          JSON.stringify(response.data.data[0])
-        );
-        window.sessionStorage.setItem('token', response.data.data[0].token);
+      if (resp.status == 200) {
+        window.sessionStorage.setItem('user', this.email);
+        window.sessionStorage.setItem('token', resp.data.token);
 
-        this.$store.commit('SET_USER', response.data.data[0]);
-        this.$store.commit('SET_TOKEN', response.data.data[0].token);
-        this.$router.push(response.redirect ? response.redirect : '/dashboard');
+        this.$store.commit('SET_USER', this.email);
+        this.$store.commit('SET_TOKEN', resp.data.token);
+        this.$router.push(resp.redirect ? resp.redirect : '/dashboard');
       } else {
-        this.alert = true;
-        this.message = response.api_message;
+        this.snackbar = true;
+        this.color.snackbar = 'error';
+        this.message = resp.data.error;
       }
     }
   }

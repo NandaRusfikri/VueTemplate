@@ -1,50 +1,18 @@
 <template>
   <v-container>
-    <v-row v-if="render">
+    <v-row>
       <v-col cols="4" md="2">
         <v-skeleton-loader
           class="mx-auto"
           max-width="600"
           type="list-item-two-line"
         >
-          <v-card v-if="render">
+          <v-card>
             <p class="title text-center " style="margin:0">
-              {{ FilterUnit[0].moderasi }}
+              997
             </p>
             <v-card-actions class="justify-center">
-              <v-btn x-small text>Moderasi</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-skeleton-loader>
-      </v-col>
-      <v-col cols="4" md="2">
-        <v-skeleton-loader
-          class="mx-auto"
-          max-width="600"
-          type="list-item-two-line"
-        >
-          <v-card v-if="render">
-            <p class="title text-center " style="margin:0">
-              {{ FilterUnit[0].total }}
-            </p>
-            <v-card-actions class="justify-center">
-              <v-btn x-small text>Total</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-skeleton-loader>
-      </v-col>
-      <v-col cols="4" md="2">
-        <v-skeleton-loader
-          class="mx-auto"
-          max-width="600"
-          type="list-item-two-line"
-        >
-          <v-card v-if="render">
-            <p class="title text-center " style="margin:0">
-              {{ FilterUnit[0].terjual }}
-            </p>
-            <v-card-actions class="justify-center">
-              <v-btn x-small text>Terjual</v-btn>
+              <v-btn x-small text>User</v-btn>
             </v-card-actions>
           </v-card>
         </v-skeleton-loader>
@@ -57,10 +25,10 @@
         >
           <v-card>
             <p class="title text-center " style="margin:0">
-              {{ FilterUnit[0].tersedia }}
+              5
             </p>
             <v-card-actions class="justify-center">
-              <v-btn x-small text>Tersedia</v-btn>
+              <v-btn x-small text>Repository</v-btn>
             </v-card-actions>
           </v-card>
         </v-skeleton-loader>
@@ -73,10 +41,10 @@
         >
           <v-card>
             <p class="title text-center " style="margin:0">
-              {{ FilterUnit[0].terpakai }}
+              5
             </p>
             <v-card-actions class="justify-center">
-              <v-btn x-small text>Terpakai</v-btn>
+              <v-btn x-small text>Repository</v-btn>
             </v-card-actions>
           </v-card>
         </v-skeleton-loader>
@@ -89,10 +57,42 @@
         >
           <v-card>
             <p class="title text-center " style="margin:0">
-              {{ FilterUnit[0].serah_terima }}
+              100
             </p>
             <v-card-actions class="justify-center">
-              <v-btn x-small text>Serah Terima</v-btn>
+              <v-btn x-small text>Target</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-skeleton-loader>
+      </v-col>
+      <v-col cols="4" md="2">
+        <v-skeleton-loader
+          class="mx-auto"
+          max-width="600"
+          type="list-item-two-line"
+        >
+          <v-card>
+            <p class="title text-center " style="margin:0">
+              532
+            </p>
+            <v-card-actions class="justify-center">
+              <v-btn x-small text>Order</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-skeleton-loader>
+      </v-col>
+      <v-col cols="4" md="2">
+        <v-skeleton-loader
+          class="mx-auto"
+          max-width="600"
+          type="list-item-two-line"
+        >
+          <v-card>
+            <p class="title text-center " style="margin:0">
+              88
+            </p>
+            <v-card-actions class="justify-center">
+              <v-btn x-small text>Lead</v-btn>
             </v-card-actions>
           </v-card>
         </v-skeleton-loader>
@@ -140,30 +140,6 @@
         </v-card>
       </v-col>
     </v-row>
-
-    <!-- <v-card class="mx-auto text-center" max-width="600">
-      <v-card-text>
-        <v-sheet color="cyan" elevation="12">
-          <v-sparkline
-            :value="value"
-            :labels="labels"
-            :gradient="gradient"
-            height="100"
-            padding="12"
-            line-width="2"
-            stroke-linecap="round"
-            smooth
-          >
-            <template v-slot:label="item"> ${{ item.value }} </template>
-          </v-sparkline>
-        </v-sheet>
-      </v-card-text>
-      <v-card-actions class="justify-center">
-        <v-btn block small text>Booking Report</v-btn>
-      </v-card-actions>
-
-      <v-divider></v-divider>
-    </v-card> -->
   </v-container>
 </template>
 <script>
@@ -195,7 +171,22 @@ export default {
   }),
 
   mounted() {
-    this.GetUnit();
+    // this.GetUnit();
+    const axios = require('axios');
+    axios
+      .get(
+        'https://shopee.co.id/api/v2/product_catalogue/get?keyword=redmi&limit=10'
+      )
+
+      .then(response => {
+        let { data } = response.data;
+        this.Statistik.Transaksi = data;
+        console.log(response);
+      })
+      .catch(error => {
+        let { responses } = error;
+        console.log(responses);
+      });
   },
   methods: {
     GetUnit() {
@@ -226,8 +217,11 @@ export default {
         params: params
       };
 
-      this.$req
-        .get('/api/transaksi/v1/statistik', request)
+      axios
+        .get(
+          'https://shopee.co.id/api/v2/product_catalogue/get?keyword=redmi&limit=10&offset=0&sort_type=0',
+          request
+        )
 
         .then(response => {
           let { data } = response.data;
@@ -316,26 +310,9 @@ export default {
         });
     }
   },
-  computed: {
-    FilterUnit: function() {
-      let d = new Date();
-      let GetTahun = d.getFullYear();
-      let GetBulan = d.getMonth() + 1;
-
-      let tahun = String(GetTahun);
-      let bulan = String(GetBulan);
-
-      if (String(GetBulan).length == 1) {
-        bulan = '0' + bulan;
-      }
-      var tanggal = tahun + '-' + bulan;
-      return this.Statistik.Unit.filter(function(number) {
-        return number.date === tanggal;
-      });
-    }
-  },
+  computed: {},
   created() {
-    this.GetTransaksi();
+    // this.GetTransaksi();
   }
 };
 </script>

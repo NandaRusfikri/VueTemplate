@@ -13,10 +13,9 @@ Vue.use(Viewer);
 Vue.config.productionTip = false;
 
 const defaultOptions = {
-  baseURL: 'http://116.197.129.222',
+  baseURL: 'https://reqres.in/',
   timeout: 0,
   headers: {
-    // 'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*'
   }
 };
@@ -28,15 +27,8 @@ instance.interceptors.request.use(function(config) {
   return config;
 });
 
-// export const base = axios.create({ baseURL: 'http://116.197.129.222' });
-// base.interceptors.request.use(cfg => {
-//   const token = sessionStorage.getItem('token');
-//   const auth = 'Bearer ' + token;
-//   if (token) cfg.headers.Authorization = auth;
-//   return cfg;
-// });
-
 Vue.prototype.$req = instance;
+Vue.prototype.$axios = instance;
 Vue.prototype.$url_img = `http://116.197.129.222/service/image/`;
 
 new Vue({
